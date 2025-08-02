@@ -1707,7 +1707,7 @@ body[data-theme='dark'] .category-item:hover {
 
             <section id="create-ticket-view" class="create-ticket-view hidden">
                 <h2><i class="fas fa-ticket-alt"></i> Submit a New Support Ticket</h2>
-                <form id="create-ticket-form" class="modern-form">
+                <form id="create-ticket-form" action="/ticket/create" method="POST" class="modern-form">
                     <div class="form-group">
                         <label for="ticket-subject">Subject <span class="required">*</span></label>
                         <input type="text" id="ticket-subject" placeholder="Concise summary of your issue" required>
