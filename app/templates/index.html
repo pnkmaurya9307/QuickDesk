@@ -3,9 +3,353 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>QuickDesk - Modern Help Desk</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    
+    <div id="app" class="app-container">
+        <nav id="main-nav" class="main-nav hidden">
+            <div class="nav-header">
+                <span class="nav-brand">QuickDesk</span>
+                <button class="menu-toggle" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" data-nav-target="dashboard" class="nav-item active-link"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="#" data-nav-target="create-ticket" class="nav-item"><i class="fas fa-plus-circle"></i> Create Ticket</a></li>
+                <li><a href="#" data-nav-target="profile" class="nav-item"><i class="fas fa-user-circle"></i> Profile</a></li>
+                <li id="admin-nav-item" class="hidden"><a href="#" data-nav-target="admin" class="nav-item"><i class="fas fa-user-shield"></i> Admin Panel</a></li>
+                <li><a href="#" id="logout-btn" class="nav-item logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+            <div class="theme-switcher">
+                <button id="theme-toggle" class="btn-icon" title="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+
+        <main id="main-content">
+            <section id="auth-view" class="auth-view active">
+                <div class="auth-card">
+                    <h2 class="auth-title">Welcome to QuickDesk</h2>
+                    <p class="auth-subtitle">Your efficient support solution.</p>
+
+                    <div class="auth-tabs">
+                        <button class="tab-button active" data-tab="login">Login</button>
+                        <button class="tab-button" data-tab="register">Register</button>
+                    </div>
+
+                    <form id="login-form" class="auth-form active">
+                        <div class="form-group">
+                            <label for="login-email">Email Address</label>
+                            <input type="email" id="login-email" placeholder="john.doe@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" placeholder="********" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                    </form>
+
+                    <form id="register-form" class="auth-form hidden">
+                        <div class="form-group">
+                            <label for="register-name">Full Name</label>
+                            <input type="text" id="register-name" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">Email Address</label>
+                            <input type="email" id="register-email" placeholder="john.doe@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Password</label>
+                            <input type="password" id="register-password" placeholder="********" required>
+                            <p class="help-text">Min 6 characters. Consider a strong password.</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-role">Register As</label>
+                            <select id="register-role" required>
+                                <option value="user">End User (Employee/Customer)</option>
+                                <option value="agent">Support Agent</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                    </form>
+                    <p class="form-error-message" id="auth-error"></p>
+                </div>
+            </section>
+
+            <section id="dashboard-view" class="dashboard-view hidden">
+                <div class="dashboard-header">
+                    <h1><i class="fas fa-clipboard-list"></i> My Tickets Overview</h1>
+                    <button class="btn btn-primary" data-nav-target="create-ticket"><i class="fas fa-plus-circle"></i> Create New Ticket</button>
+                </div>
+
+                <div class="dashboard-filters">
+                    <div class="filter-group">
+                        <label for="status-filter"><i class="fas fa-info-circle"></i> Status:</label>
+                        <select id="status-filter">
+                            <option value="all">All</option>
+                            <option value="open">Open</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="category-filter"><i class="fas fa-tag"></i> Category:</label>
+                        <select id="category-filter">
+                            <option value="all">All</option>
+                            </select>
+                    </div>
+                    <div class="filter-group checkbox-group">
+                        <input type="checkbox" id="my-tickets-filter">
+                        <label for="my-tickets-filter">Only My Tickets</label>
+                    </div>
+                    <div class="filter-group search-group">
+                        <input type="text" id="search-tickets" placeholder="Search by subject or description...">
+                        <button class="btn btn-primary btn-icon"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="filter-group sort-group">
+                        <label for="sort-by"><i class="fas fa-sort"></i> Sort By:</label>
+                        <select id="sort-by">
+                            <option value="recent">Recently Modified</option>
+                            <option value="replies">Most Replied</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="ticket-grid" id="ticket-grid">
+                    <div class="ticket-card skeleton">
+                        <div class="skeleton-line short"></div>
+                        <div class="skeleton-line medium"></div>
+                        <div class="skeleton-line long"></div>
+                        <div class="skeleton-line medium"></div>
+                    </div>
+                    <div class="ticket-card skeleton">
+                        <div class="skeleton-line short"></div>
+                        <div class="skeleton-line medium"></div>
+                        <div class="skeleton-line long"></div>
+                        <div class="skeleton-line medium"></div>
+                    </div>
+                    <div class="ticket-card skeleton">
+                        <div class="skeleton-line short"></div>
+                        <div class="skeleton-line medium"></div>
+                        <div class="skeleton-line long"></div>
+                        <div class="skeleton-line medium"></div>
+                    </div>
+                </div>
+
+                <div class="pagination">
+                    <button class="btn btn-secondary" id="prev-page" disabled><i class="fas fa-chevron-left"></i> Previous</button>
+                    <span id="page-info">Page 1 of 1</span>
+                    <button class="btn btn-secondary" id="next-page" disabled>Next <i class="fas fa-chevron-right"></i></button>
+                </div>
+            </section>
+
+            <section id="create-ticket-view" class="create-ticket-view hidden">
+                <h2><i class="fas fa-ticket-alt"></i> Submit a New Support Ticket</h2>
+                <form id="create-ticket-form" class="modern-form">
+                    <div class="form-group">
+                        <label for="ticket-subject">Subject <span class="required">*</span></label>
+                        <input type="text" id="ticket-subject" placeholder="Concise summary of your issue" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ticket-description">Detailed Description <span class="required">*</span></label>
+                        <textarea id="ticket-description" rows="10" placeholder="Provide all relevant details: what, when, how it happened, steps to reproduce, error messages, etc." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="ticket-category">Category <span class="required">*</span></label>
+                        <select id="ticket-category" required>
+                            </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ticket-attachment">Attachments (Optional)</label>
+                        <input type="file" id="ticket-attachment" multiple accept="image/*,.pdf,.doc,.docx">
+                        <p class="help-text">Max 5 files, 5MB each. Allowed types: Images, PDFs, Word documents.</p>
+                        <div id="selected-files" class="selected-files-preview"></div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Ticket</button>
+                        <button type="button" class="btn btn-secondary" data-nav-target="dashboard"><i class="fas fa-times"></i> Cancel</button>
+                    </div>
+                    <p class="form-error-message" id="create-ticket-error"></p>
+                </form>
+            </section>
+
+            <section id="ticket-detail-view" class="ticket-detail-view hidden">
+                <button class="btn btn-back" data-nav-target="dashboard"><i class="fas fa-arrow-left"></i> Back to Dashboard</button>
+                <div class="ticket-detail-card">
+                    <div class="ticket-detail-header">
+                        <h2 id="detail-subject"></h2>
+                        <span class="ticket-status" id="detail-status"></span>
+                    </div>
+                    <p class="ticket-meta">
+                        Raised by: <strong id="detail-raised-by"></strong> on <span id="detail-date"></span>
+                        <span id="detail-category" class="tag-category"></span>
+                    </p>
+                    <p class="ticket-meta agent-meta">
+                        Assigned to: <strong id="detail-assigned-to">N/A</strong>
+                    </p>
+
+                    <div class="section-divider"></div>
+
+                    <div class="ticket-description-full">
+                        <h3><i class="fas fa-file-alt"></i> Description</h3>
+                        <div id="detail-description" class="content-box"></div>
+                        <div id="detail-attachments" class="attachments-list">
+                            <h4><i class="fas fa-paperclip"></i> Attachments</h4>
+                            <p class="no-attachments">No attachments.</p>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <div class="ticket-actions-row">
+                        <div class="vote-controls">
+                            <button class="btn btn-outline-primary vote-btn" id="upvote-btn" title="Upvote"><i class="fas fa-thumbs-up"></i> <span id="upvote-count">0</span></button>
+                            <button class="btn btn-outline-secondary vote-btn" id="downvote-btn" title="Downvote"><i class="fas fa-thumbs-down"></i> <span id="downvote-count">0</span></button>
+                        </div>
+                        <div class="agent-actions hidden" id="agent-actions-section">
+                            <button class="btn btn-info" id="assign-ticket-btn"><i class="fas fa-user-tag"></i> Assign to Me</button>
+                            <select id="agent-status-update" class="status-select">
+                                <option value="">Update Status</option>
+                                <option value="open">Open</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="resolved">Resolved</option>
+                                <option value="closed">Closed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <div class="conversation-timeline" id="conversation-timeline">
+                        <h3><i class="fas fa-comments"></i> Conversation History</h3>
+                        <div class="timeline-entries">
+                            </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <div class="add-comment-section">
+                        <h3><i class="fas fa-comment-dots"></i> Add Comment / Update</h3>
+                        <textarea id="comment-text" rows="5" placeholder="Type your comment or update here..."></textarea>
+                        <button class="btn btn-primary" id="add-comment-btn"><i class="fas fa-reply"></i> Post Comment</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="profile-view" class="profile-view hidden">
+                <h2><i class="fas fa-user-circle"></i> Profile & Settings</h2>
+                <div class="profile-card modern-form">
+                    <h3>Your Information</h3>
+                    <div class="profile-info-display">
+                        <p><strong>Name:</strong> <span id="profile-name"></span></p>
+                        <p><strong>Email:</strong> <span id="profile-email"></span></p>
+                        <p><strong>Role:</strong> <span id="profile-role"></span></p>
+                    </div>
+                    <div class="profile-actions">
+                        <button class="btn btn-secondary"><i class="fas fa-edit"></i> Edit Profile</button>
+                        <button class="btn btn-secondary"><i class="fas fa-key"></i> Change Password</button>
+                    </div>
+                </div>
+                <div class="notification-settings modern-form">
+                    <h3><i class="fas fa-bell"></i> Notification Preferences</h3>
+                    <div class="form-group switch-group">
+                        <label for="email-notifications">Email Notifications</label>
+                        <label class="switch">
+                            <input type="checkbox" id="email-notifications" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group switch-group">
+                        <label for="push-notifications">In-app Notifications (Coming Soon)</label>
+                        <label class="switch">
+                            <input type="checkbox" id="push-notifications" disabled>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <section id="admin-view" class="admin-view hidden">
+                <h2><i class="fas fa-user-shield"></i> Admin Panel</h2>
+                <div class="admin-tabs">
+                    <button class="tab-button active" data-admin-tab="user-management"><i class="fas fa-users"></i> User Management</button>
+                    <button class="tab-button" data-admin-tab="category-management"><i class="fas fa-tags"></i> Category Management</button>
+                </div>
+
+                <div id="user-management-panel" class="admin-panel active">
+                    <h3>Registered Users</h3>
+                    <div class="user-list-grid" id="user-list-grid">
+                        <div class="user-item skeleton-user">
+                            <div class="skeleton-line short"></div>
+                            <div class="skeleton-line medium"></div>
+                            <div class="skeleton-line short"></div>
+                            <div class="skeleton-line tiny"></div>
+                        </div>
+                        <div class="user-item skeleton-user">
+                            <div class="skeleton-line short"></div>
+                            <div class="skeleton-line medium"></div>
+                            <div class="skeleton-line short"></div>
+                            <div class="skeleton-line tiny"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="category-management-panel" class="admin-panel hidden">
+                    <h3>Manage Ticket Categories</h3>
+                    <form id="add-category-form" class="modern-form compact-form">
+                        <div class="form-group">
+                            <label for="new-category-name">New Category Name</label>
+                            <input type="text" id="new-category-name" placeholder="e.g., Network Issues" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add Category</button>
+                    </form>
+                    <div class="category-list-grid" id="category-list-grid">
+                        </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="modal-container" class="modal-container hidden">
+        <div id="edit-role-modal" class="modal-content hidden">
+            <button class="close-button" data-modal-close>&times;</button>
+            <h3>Edit User Role</h3>
+            <p>User: <strong id="modal-user-name"></strong> (<span id="modal-user-email"></span>)</p>
+            <div class="form-group">
+                <label for="modal-user-role">New Role</label>
+                <select id="modal-user-role">
+                    <option value="user">End User</option>
+                    <option value="agent">Support Agent</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="save-role-btn">Save Changes</button>
+                <button class="btn btn-secondary" data-modal-close>Cancel</button>
+            </div>
+        </div>
+
+        <div id="confirmation-modal" class="modal-content hidden">
+            <button class="close-button" data-modal-close>&times;</button>
+            <h3 id="confirmation-title">Confirm Action</h3>
+            <p id="confirmation-message">Are you sure you want to proceed?</p>
+            <div class="modal-actions">
+                <button class="btn btn-danger" id="confirm-action-btn">Confirm</button>
+                <button class="btn btn-secondary" data-modal-close>Cancel</button>
+            </div>
+        </div>
+
+        </div>
+
+    <div id="toast-container" class="toast-container">
+        </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
