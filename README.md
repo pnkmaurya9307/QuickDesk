@@ -73,4 +73,3 @@ This project is currently a functional prototype developed for a hackathon. Whil
 
 📧 Email notifications via Firebase Cloud Functions.
 
-⚙️ More granular permissions and user management tools for the admin role.
