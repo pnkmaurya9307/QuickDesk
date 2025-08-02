@@ -82,7 +82,7 @@ def index():
             return redirect(url_for('admin_dashboard'))
         elif current_user.role == 'support_agent':
             return redirect(url_for('agent_dashboard'))
-        else:
+        elif current_user.role=='end_user':
             return redirect(url_for('user_dashboard'))
     return render_template('index.html')
 
